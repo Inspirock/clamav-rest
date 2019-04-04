@@ -3,7 +3,7 @@ set -m
 
 host=${CLAMD_HOST:-192.168.50.72}
 port=${CLAMD_PORT:-3310}
-filesize=${MAXSIZE:-10GB}
+filesize=${MAXSIZE:-20000KB}
 apikey=${API_KEY:-ABCDEFGHIJKLMNOPQRSTUVWXYZ}
 
 echo "using clamd server: $host:$port"
