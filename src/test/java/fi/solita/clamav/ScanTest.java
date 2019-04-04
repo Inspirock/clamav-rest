@@ -25,6 +25,7 @@ public class ScanTest
   @Test
   public void testEicar() {
     HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Api-Key", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     headers.setContentType(MediaType.MULTIPART_FORM_DATA);
     MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
     body.add("name", "eicar.com.txt");
@@ -33,12 +34,13 @@ public class ScanTest
     RestTemplate t = new RestTemplate();
     ResponseEntity response = t.postForEntity("http://localhost:8080/scan", requestEntity, String.class);
     String s = response.getBody().toString();
-    assertEquals(s, "{\"status\":false}");
+    assertEquals("{\"status\":false}", s);
   }
 
   @Test
   public void testNoVirus() {
     HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Api-Key", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     headers.setContentType(MediaType.MULTIPART_FORM_DATA);
     MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
     body.add("name", "test.txt");
@@ -47,6 +49,6 @@ public class ScanTest
     RestTemplate t = new RestTemplate();
     ResponseEntity response = t.postForEntity("http://localhost:8080/scan", requestEntity, String.class);
     String s = response.getBody().toString();
-    assertEquals(s, "{\"status\":true}");
+    assertEquals("{\"status\":true}", s);
   }
 }

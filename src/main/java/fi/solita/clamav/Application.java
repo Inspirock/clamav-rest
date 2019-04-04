@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.embedded.MultipartConfigFactory;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +37,16 @@ public class Application {
     return factory.createMultipartConfig();
   }
 
+  @Bean
+  public FilterRegistrationBean registerAuthKeyFilter(AuthKeyFilter filter){
+    FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+
+    registrationBean.setFilter(filter);
+    registrationBean.addUrlPatterns("/*");
+
+    return registrationBean;
+  }
+
   public static void main(String[] args) {
     SpringApplication app = new SpringApplication(Application.class);
     Map<String, Object> defaults = new HashMap<String, Object>();
@@ -44,6 +55,7 @@ public class Application {
     defaults.put("clamd.timeout", 500);
     defaults.put("clamd.maxfilesize", "20000KB");
     defaults.put("clamd.maxrequestsize", "20000KB");
+    defaults.put("apikey", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     app.setDefaultProperties(defaults);
     app.run(args);
   }
