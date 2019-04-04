@@ -3,6 +3,7 @@ package fi.solita.clamav;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,14 +35,16 @@ public class ClamAVProxy {
   /**
    * @return Clamd scan result
    */
-  @RequestMapping(value="/scan", method=RequestMethod.POST)
-  public @ResponseBody String handleFileUpload(@RequestParam("name") String name,
+  @RequestMapping(value="/scan", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+  public @ResponseBody ClamAVScanStatus handleFileUpload(@RequestParam("name") String name,
                                                @RequestParam("file") MultipartFile file) throws IOException{
     if (!file.isEmpty()) {
       ClamAVClient a = new ClamAVClient(hostname, port, timeout);
       byte[] r = a.scan(file.getInputStream());
-      return "Everything ok : " + ClamAVClient.isCleanReply(r) + "\n";
-    } else throw new IllegalArgumentException("empty file");
+      return new ClamAVScanStatus(ClamAVClient.isCleanReply(r));
+    } else {
+        throw new IllegalArgumentException("empty file");
+    }
   }
 
   /**
