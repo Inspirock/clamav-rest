@@ -25,37 +25,48 @@ public class ClamAVProxy {
 
   /**
    * @return Clamd status.
+   * @throws java.io.IOException
    */
-  @RequestMapping("/")
-  public String ping() throws IOException {
-    ClamAVClient a = new ClamAVClient(hostname, port, timeout);
-    return "Clamd responding: " + a.ping() + "\n";
+  @RequestMapping(value="/", produces=MediaType.APPLICATION_JSON_VALUE)
+  public @ResponseBody StatusResponse ping() throws IOException {
+    ClamAVClient client = new ClamAVClient(hostname, port, timeout);
+    StatusResponse response = new StatusResponse(client.ping());
+    return response;
   }
 
   /**
+   * @param name
+   * @param file
    * @return Clamd scan result
+   * @throws java.io.IOException
    */
-  @RequestMapping(value="/scan", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-  public @ResponseBody ClamAVScanStatus handleFileUpload(@RequestParam("name") String name,
+  @RequestMapping(value="/scan", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
+  public @ResponseBody StatusResponse handleFileUpload(@RequestParam("name") String name,
                                                @RequestParam("file") MultipartFile file) throws IOException{
     if (!file.isEmpty()) {
-      ClamAVClient a = new ClamAVClient(hostname, port, timeout);
-      byte[] r = a.scan(file.getInputStream());
-      return new ClamAVScanStatus(ClamAVClient.isCleanReply(r));
+      ClamAVClient client = new ClamAVClient(hostname, port, timeout);
+      byte[] r = client.scan(file.getInputStream());
+      StatusResponse response = new StatusResponse(ClamAVClient.isCleanReply(r));
+      return response;
     } else {
         throw new IllegalArgumentException("empty file");
     }
   }
 
   /**
+   * @param name
+   * @param file
    * @return Clamd scan reply
+   * @throws java.io.IOException
    */
   @RequestMapping(value="/scanReply", method=RequestMethod.POST)
   public @ResponseBody String handleFileUploadReply(@RequestParam("name") String name,
                                                     @RequestParam("file") MultipartFile file) throws IOException{
     if (!file.isEmpty()) {
-      ClamAVClient a = new ClamAVClient(hostname, port, timeout);
-      return new String(a.scan(file.getInputStream()));
-    } else throw new IllegalArgumentException("empty file");
+      ClamAVClient client = new ClamAVClient(hostname, port, timeout);
+      return new String(client.scan(file.getInputStream()));
+    } else {
+        throw new IllegalArgumentException("empty file");
+    }
   }
 }

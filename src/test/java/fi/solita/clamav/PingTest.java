@@ -14,6 +14,6 @@ public class PingTest {
   public void testPing() {
     RestTemplate t = new RestTemplate();
     String s = t.getForObject("http://localhost:8080", String.class);
-    assertEquals(s, "Clamd responding: true\n");
+    assertEquals(s, "{\"status\":true}");
   }
 }

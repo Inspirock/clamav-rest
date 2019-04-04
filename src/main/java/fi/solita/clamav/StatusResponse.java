@@ -4,12 +4,12 @@ package fi.solita.clamav;
  *
  * @author ashutoshmimani
  */
-public class ClamAVScanStatus
+public class StatusResponse
 {
 
     private boolean status;
 
-    ClamAVScanStatus(boolean status)
+    StatusResponse(boolean status)
     {
         this.status = status;
     }
