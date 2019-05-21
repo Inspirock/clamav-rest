@@ -52,7 +52,7 @@ public class Application {
     Map<String, Object> defaults = new HashMap<String, Object>();
     defaults.put("clamd.host", "192.168.50.72");
     defaults.put("clamd.port", 3310);
-    defaults.put("clamd.timeout", 500);
+    defaults.put("clamd.timeout", 5000);
     defaults.put("clamd.maxfilesize", "20000KB");
     defaults.put("clamd.maxrequestsize", "20000KB");
     defaults.put("apikey", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
